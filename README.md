@@ -1,4 +1,5 @@
 
+<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -19,14 +20,19 @@ color:#222;
 
 header{
 background:linear-gradient(135deg,#ff6b35,#ff8c42);
-padding:50px 20px;
+padding:40px 20px;
 text-align:center;
 color:white;
 }
 
+.logo{
+width:90px;
+margin-bottom:10px;
+}
+
 header h1{
-margin:0;
-font-size:40px;
+margin:5px 0;
+font-size:36px;
 }
 
 header p{
@@ -76,6 +82,14 @@ font-size:16px;
 color:#ff6b35;
 font-weight:600;
 margin-top:5px;
+}
+
+.bumbu-select{
+width:100%;
+padding:6px;
+margin-top:8px;
+border-radius:6px;
+border:1px solid #ddd;
 }
 
 .qty-control{
@@ -142,8 +156,13 @@ opacity:.9;
 <body>
 
 <header>
+
+<!-- GANTI LOGO DI SINI -->
+<img src="logo.png" class="logo">
+
 <h1>Filletia</h1>
 <p>Ikan Fillet Premium Segar Setiap Hari</p>
+
 </header>
 
 <div class="container">
@@ -176,26 +195,33 @@ const products=[
 id:1,
 name:"Fillet Nila",
 price:25000,
-img:"https://images.unsplash.com/photo-1604908176997-4316d1b9a5b4"
+img:"gambar-nila.jpg"
 },
 {
 id:2,
 name:"Fillet Gurame",
 price:35000,
-img:"filletGurame.jgp"
+img:"gambar-gurame.jpg"
 },
 {
 id:3,
 name:"Fillet Kakap",
 price:40000,
-img:"Filletkapap.jpg"
+img:"gambar-kakap.jpg"
 },
 {
 id:4,
 name:"Fillet Kembung",
 price:20000,
-img:"Filletkembung.jpg"
+img:"gambar-kembung.jpg"
 }
+]
+
+const bumbu=[
+"Bumbu Marinasi",
+"Bumbu Bakar",
+"Bumbu Pepes",
+"Bumbu Kuah Kuning"
 ]
 
 let cart=[]
@@ -220,6 +246,10 @@ el.innerHTML=products.map(p=>`
 
 <div class="price">${format(p.price)}</div>
 
+<select class="bumbu-select" id="bumbu-${p.id}">
+${bumbu.map(b=>`<option>${b}</option>`).join("")}
+</select>
+
 <div class="qty-control">
 
 <button class="qty-btn" onclick="addCart(${p.id})">+</button>
@@ -238,7 +268,9 @@ el.innerHTML=products.map(p=>`
 
 function addCart(id){
 
-const item=cart.find(i=>i.id===id)
+const bumbu=document.getElementById("bumbu-"+id).value
+
+const item=cart.find(i=>i.id===id && i.bumbu===bumbu)
 
 if(item){
 
@@ -248,7 +280,7 @@ item.qty++
 
 const product=products.find(p=>p.id===id)
 
-cart.push({...product,qty:1})
+cart.push({...product,bumbu:bumbu,qty:1})
 
 }
 
@@ -298,7 +330,7 @@ return`
 
 <div class="cart-item">
 
-<div>${i.name} x${i.qty}</div>
+<div>${i.name} (${i.bumbu}) x${i.qty}</div>
 
 <div>${format(i.price*i.qty)}</div>
 
@@ -328,7 +360,7 @@ let total=0
 
 cart.forEach(i=>{
 
-text+=`%0A${i.name} x${i.qty} = ${format(i.price*i.qty)}`
+text+=`%0A${i.name} - ${i.bumbu} x${i.qty} = ${format(i.price*i.qty)}`
 
 total+=i.price*i.qty
 
@@ -336,7 +368,7 @@ total+=i.price*i.qty
 
 text+=`%0A%0ATotal: ${format(total)}`
 
-const url=`https://wa.me/6282134566290`
+const url=`https://wa.me/${adminWA}?text=${text}`
 
 window.open(url,"_blank")
 
@@ -347,3 +379,4 @@ renderProducts()
 </script>
 
 </body>
+</html>
