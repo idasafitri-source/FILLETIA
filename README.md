@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Filletia | Ikan Fillet Premium</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -15,27 +17,14 @@ background:#f7f7f7;
 color:#222;
 }
 
-/* HEADER LOGO */
-
-.header-logo{
-background:#ff6b35;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:30px 0;
-}
-
-.logo{
-width:320px;
-max-width:90%;
-}
-
-/* CONTAINER */
-
 .container{
 max-width:1100px;
 margin:auto;
 padding:30px 20px;
+}
+
+h2{
+margin-bottom:20px;
 }
 
 /* GRID PRODUK */
@@ -85,13 +74,13 @@ margin-top:5px;
 
 select{
 width:100%;
-padding:6px;
+padding:7px;
 margin-top:8px;
 border-radius:6px;
 border:1px solid #ddd;
 }
 
-/* QTY BUTTON */
+/* BUTTON QTY */
 
 .qty-control{
 display:flex;
@@ -121,10 +110,6 @@ border-radius:15px;
 box-shadow:0 6px 15px rgba(0,0,0,0.08);
 }
 
-.cart h2{
-margin-top:0;
-}
-
 .cart-item{
 display:flex;
 justify-content:space-between;
@@ -138,7 +123,7 @@ font-weight:700;
 font-size:18px;
 }
 
-/* BUTTON WHATSAPP */
+/* BUTTON WA */
 
 .checkout{
 margin-top:15px;
@@ -178,13 +163,9 @@ font-weight:600;
 
 <body>
 
-<header class="header-logo">
-<img src="logo.png" class="logo">
-</header>
-
 <div class="container">
 
-<h2>Produk Kami</h2>
+<h2>Pilih Produk</h2>
 
 <div class="product-grid" id="products"></div>
 
@@ -197,14 +178,14 @@ font-weight:600;
 <div class="total" id="total">Total: Rp 0</div>
 
 <button class="checkout" onclick="checkoutWA()">
-Checkout via WhatsApp
+Pesan ke Admin (WhatsApp)
 </button>
 
 </div>
 
 <div class="social">
 <a class="ig-btn" target="_blank" href="https://www.instagram.com/filletia.purwokerto?igsh=MWIxOHJucmZ1c213bA==">
-Kunjungi Instagram Kami
+Instagram Filletia
 </a>
 </div>
 
@@ -263,17 +244,16 @@ el.innerHTML=products.map(p=>`
 
 <div class="price">${format(p.price)}</div>
 
-<select>
-<option>Bumbu Marinasi</option>
-<option>Bumbu Bakar</option>
-<option>Bumbu Pepes</option>
-<option>Bumbu Kuah Kuning</option>
+<select id="bumbu-${p.id}">
+<option value="Bumbu Marinasi">Bumbu Marinasi</option>
+<option value="Bumbu Bakar">Bumbu Bakar</option>
+<option value="Bumbu Pepes">Bumbu Pepes</option>
+<option value="Bumbu Kuah Kuning">Bumbu Kuah Kuning</option>
 </select>
 
 <div class="qty-control">
 
 <button class="qty-btn" onclick="addCart(${p.id})">+</button>
-
 <button class="qty-btn" onclick="removeCart(${p.id})">-</button>
 
 </div>
@@ -288,13 +268,15 @@ el.innerHTML=products.map(p=>`
 
 function addCart(id){
 
-const item=cart.find(i=>i.id===id)
+const bumbu=document.getElementById("bumbu-"+id).value
+
+const item=cart.find(i=>i.id===id && i.bumbu===bumbu)
 
 if(item){
 item.qty++
 }else{
 const product=products.find(p=>p.id===id)
-cart.push({...product,qty:1})
+cart.push({...product,qty:1,bumbu:bumbu})
 }
 
 renderCart()
@@ -310,7 +292,7 @@ if(!item)return
 item.qty--
 
 if(item.qty<=0){
-cart=cart.filter(i=>i.id!==id)
+cart=cart.filter(i=>i!==item)
 }
 
 renderCart()
@@ -322,28 +304,25 @@ function renderCart(){
 const list=document.getElementById("cart-list")
 
 if(cart.length===0){
-
 list.innerHTML="Keranjang masih kosong"
-
 document.getElementById("total").innerText="Total: Rp 0"
-
 return
-
 }
 
 let total=0
 
 list.innerHTML=cart.map(i=>{
 
-total+=i.price*i.qty
+const subtotal=i.price*i.qty
+total+=subtotal
 
 return`
 
 <div class="cart-item">
 
-<div>${i.name} x${i.qty}</div>
+<div>${i.name} (${i.bumbu}) x${i.qty}</div>
 
-<div>${format(i.price*i.qty)}</div>
+<div>${format(subtotal)}</div>
 
 </div>
 
@@ -362,18 +341,23 @@ alert("Keranjang kosong")
 return
 }
 
-let text="Halo admin Filletia%0A%0ASaya ingin pesan:%0A"
+let text="Halo Admin Filletia%0A%0ASaya ingin pesan:%0A"
 
 let total=0
 
 cart.forEach(i=>{
-text+=`%0A${i.name} x${i.qty} = ${format(i.price*i.qty)}`
-total+=i.price*i.qty
+
+const subtotal=i.price*i.qty
+total+=subtotal
+
+text+=`%0A${i.name} - ${i.bumbu}`
+text+=`%0A${i.qty} x ${format(i.price)} = ${format(subtotal)}%0A`
+
 })
 
-text+=`%0A%0ATotal: ${format(total)}`
+text+=`%0ATotal Pesanan: ${format(total)}`
 
-const url=`https://wa.me/6282134566290`
+const url=`https://wa.me/${adminWA}?text=${text}`
 
 window.open(url,"_blank")
 
