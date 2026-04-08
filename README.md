@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -252,13 +252,11 @@ alert("Isi nama dan alamat dulu")
 return
 }
 
-let text = `Halo Admin Filletia
-
-Nama: ${nama}
-Alamat: ${alamat}
-
-Saya ingin pesan:
-`
+// ✅ FORMAT PESAN
+let text = "Halo Admin Filletia\n\n"
+text += "Nama: " + nama + "\n"
+text += "Alamat: " + alamat + "\n\n"
+text += "Pesanan:\n"
 
 let total=0
 
@@ -266,20 +264,18 @@ cart.forEach(i=>{
 const subtotal=i.price*i.qty
 total+=subtotal
 
-text += `
-${i.name} - ${i.bumbu}
-${i.qty} x ${format(i.price)} = ${format(subtotal)}
-`
+text += "\n" + i.name + " (" + i.bumbu + ")"
+text += "\n" + i.qty + " x " + format(i.price)
+text += " = " + format(subtotal) + "\n"
 })
 
-text += `
+text += "\nTotal: " + format(total)
 
-Total Pesanan: ${format(total)}
-`
+// ✅ WAJIB ENCODE
+const url = "https://wa.me/6282134566290" + adminWA + "?text=" + encodeURIComponent(text)
 
-const url = `https://wa.me/6282134566290`
-
-window.open(url, "_blank")
+// ✅ OPEN WA
+window.location.href = url
 }
 
 renderProducts()
