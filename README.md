@@ -20,10 +20,6 @@ margin:auto;
 padding:20px;
 }
 
-h2{
-margin-bottom:20px;
-}
-
 .product-item{
 display:flex;
 gap:20px;
@@ -115,28 +111,6 @@ margin-bottom:10px;
 border-radius:8px;
 border:1px solid #ddd;
 }
-
-.social{
-text-align:center;
-margin-top:30px;
-}
-
-.ig-btn{
-background:#E1306C;
-color:white;
-padding:10px 20px;
-border-radius:8px;
-text-decoration:none;
-}
-
-@media(max-width:768px){
-.product-item{
-flex-direction:column;
-}
-.product-image img{
-width:100%;
-}
-}
 </style>
 </head>
 
@@ -145,7 +119,6 @@ width:100%;
 <div class="container">
 
 <h2>Pilih Produk</h2>
-
 <div id="products"></div>
 
 <div class="cart">
@@ -166,18 +139,11 @@ Pesan ke WhatsApp
 
 </div>
 
-<div class="social">
-<a class="ig-btn" target="_blank"
-href="https://www.instagram.com/filletia.purwokerto?igsh=MWIxOHJucmZ1c213bA==">
-Instagram Filletia
-</a>
-</div>
-
 </div>
 
 <script>
 
-const adminWA="6281234567890"
+const adminWA="6282134566290"
 
 const products=[
 { id:1,name:"Fillet Nila",price:25000,img:"nila.jpg"},
@@ -273,8 +239,8 @@ document.getElementById("total").innerText="Total: "+format(total)
 
 function checkoutWA(){
 
-const nama=document.getElementById("nama").value
-const alamat=document.getElementById("alamat").value
+const nama=document.getElementById("nama").value.trim()
+const alamat=document.getElementById("alamat").value.trim()
 
 if(cart.length===0){
 alert("Keranjang kosong")
@@ -286,10 +252,13 @@ alert("Isi nama dan alamat dulu")
 return
 }
 
-let text=`Halo Admin Filletia%0A%0A`
-text+=`Nama: ${nama}%0A`
-text+=`Alamat: ${alamat}%0A`
-text+=`%0ASaya ingin pesan:%0A`
+let text = `Halo Admin Filletia
+
+Nama: ${nama}
+Alamat: ${alamat}
+
+Saya ingin pesan:
+`
 
 let total=0
 
@@ -297,15 +266,20 @@ cart.forEach(i=>{
 const subtotal=i.price*i.qty
 total+=subtotal
 
-text+=`%0A${i.name} - ${i.bumbu}`
-text+=`%0A${i.qty} x ${format(i.price)} = ${format(subtotal)}%0A`
+text += `
+${i.name} - ${i.bumbu}
+${i.qty} x ${format(i.price)} = ${format(subtotal)}
+`
 })
 
-text+=`%0ATotal Pesanan: ${format(total)}`
+text += `
 
-const url=`https://wa.me/6282134566290`
+Total Pesanan: ${format(total)}
+`
 
-window.open(url,"_blank")
+const url = `https://wa.me/6282134566290`
+
+window.open(url, "_blank")
 }
 
 renderProducts()
