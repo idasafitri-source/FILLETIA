@@ -303,7 +303,7 @@ text+=`%0A${i.qty} x ${format(i.price)} = ${format(subtotal)}%0A`
 
 text+=`%0ATotal Pesanan: ${format(total)}`
 
-const url=`https://wa.me/${adminWA}?text=${text}`
+const url=`https://https://wa.me/82134566290`
 
 window.open(url,"_blank")
 }
